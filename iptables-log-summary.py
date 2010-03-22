@@ -15,11 +15,11 @@ def main():
 
     for line in lines:
         # TCP log line regex
-        matches = re.search("IN=([^ ]*) OUT=([^ ]*) SRC=([^ ]*) DST=([^ ]*) LEN=([^ ]*) TOS=([^ ]*) PREC=([^ ]*) TTL=([^ ]*) ID=([^ ]*) DF PROTO=([^ ]*) SPT=([^ ]*) DPT=([^ ]*) WINDOW=([^ ]*) RES=([^ ]*) SYN URGP=([^ ]*)", line.strip())
+        matches = re.search("IN=([^ ]*) OUT=([^ ]*) SRC=([^ ]*) DST=([^ ]*) LEN=([^ ]*) TOS=([^ ]*) PREC=([^ ]*) TTL=([^ ]*) ID=([^ ]*) (?:DF)? PROTO=([^ ]*) SPT=([^ ]*) DPT=([^ ]*) WINDOW=([^ ]*) RES=([^ ]*) SYN URGP=([^ ]*)", line.strip())
 
         if matches is None:
             # UDP log line regex
-            matches = re.search("IN=([^ ]*) OUT=([^ ]*) SRC=([^ ]*) DST=([^ ]*) LEN=([^ ]*) TOS=([^ ]*) PREC=([^ ]*) TTL=([^ ]*) ID=([^ ]*) PROTO=([^ ]*) SPT=([^ ]*) DPT=([^ ]*)", line.strip())
+            matches = re.search("IN=([^ ]*) OUT=([^ ]*) SRC=([^ ]*) DST=([^ ]*) LEN=([^ ]*) TOS=([^ ]*) PREC=([^ ]*) TTL=([^ ]*) ID=([^ ]*) (?:DF)? PROTO=([^ ]*) SPT=([^ ]*) DPT=([^ ]*)", line.strip())
 
         if matches is None:
             continue
