@@ -4,6 +4,9 @@
 # IN= OUT=eth0 SRC=10.11.19.194 DST=10.6.171.68 LEN=58 TOS=0x00 PREC=0x00 TTL=64 ID=60930 PROTO=UDP SPT=32802 DPT=53 LEN=38
 import re, sys, os
 
+def sortData(dict):
+    return sorted(dict.keys(), key=lambda x:(x[2], x[1], x[0], x[3]))
+
 def main():
     if os.path.exists("/var/log/messages"):
         lines = open("/var/log/messages", "r").readlines()
@@ -12,6 +15,7 @@ def main():
 
     ignoredevs = []
     ports = {}
+    addr = ""
 
     for line in lines:
         # TCP log line regex
@@ -32,13 +36,20 @@ def main():
         if dev in ignoredevs:
             continue
 
-        if (toport, toproto, dev) not in ports.keys():
-            ports[(toport, toproto, dev)] = 0
+        if (toport, toproto, dev, toaddr) not in ports.keys():
+            ports[(toport, toproto, dev, toaddr)] = 0
 
-        ports[(toport, toproto, dev)] = ports[(toport, toproto, dev)] + 1
+        ports[(toport, toproto, dev, toaddr)] = ports[(toport, toproto, dev, toaddr)] + 1
 
-    for port, proto, dev in ports.keys():
-        print "There have been %d connections to %s/%s (%s)" % (ports[(port, proto, dev)], port, proto, dev)
+    lastdev=""
+
+    for port, proto, dev, toaddr in sortData(ports):
+        if dev != lastdev:
+            print "\nDevice: %s" % (dev)
+            lastdev = dev
+        print "There have been %d connections to %s/%s (%s)" % (ports[(port, proto, dev, toaddr)], port, proto, toaddr)
+
+
 
 if __name__ == "__main__":
     # assert("smtp" == getServiceName("25", "tcp"))
